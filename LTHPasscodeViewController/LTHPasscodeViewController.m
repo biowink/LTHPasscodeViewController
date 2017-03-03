@@ -158,6 +158,9 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 #pragma mark - View life
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self _loadFonts];
+    
 	self.view.backgroundColor = _backgroundColor;
     
 	_failedAttempts = 0;
@@ -1190,14 +1193,6 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     _usesKeychain = YES;
     _displayedAsModal = YES;
     _hidesBackButton = NO;
-        
-    // Fonts
-    _labelFontSize = 44.0;
-	_failedAttemptLabelFontSize = 16.0f;
-    _passcodeFontSize = 33.0;
-    _labelFont = [UIFont bw_lightMrEavesFontWithSize:_labelFontSize];
-	_failedAttemptLabelFont = [UIFont bw_regularMrEavesFontWithSize:_failedAttemptLabelFontSize];
-    _passcodeFont = [UIFont bw_lightMrEavesFontWithSize:_labelFontSize];
     
     // Colors
     _backgroundColor =  [Appearance backgroundColor];
@@ -1219,6 +1214,14 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     _passcodeCharacter = @"\u2014"; // A longer "-";
 }
 
+- (void)_loadFonts {
+    _labelFontSize = 44.0;
+    _failedAttemptLabelFontSize = 16.0f;
+    _passcodeFontSize = 33.0;
+    _labelFont = [UIFont bw_lightMrEavesFontWithSize:_labelFontSize];
+    _failedAttemptLabelFont = [UIFont bw_regularMrEavesFontWithSize:_failedAttemptLabelFontSize];
+    _passcodeFont = [UIFont bw_lightMrEavesFontWithSize:_labelFontSize];
+}
 
 - (void)_addObservers {
     [[NSNotificationCenter defaultCenter]
