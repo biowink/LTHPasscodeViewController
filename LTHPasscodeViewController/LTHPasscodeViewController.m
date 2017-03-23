@@ -117,7 +117,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 							  andServiceName:_keychainServiceName
 									   error:nil];
 	
-	[[AppDelegate sharedDelegate].serviceLocator.analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
+	[[BWServiceLocator sharedServiceLocator].analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
 																													  BWAnalyticsAttributeAction : @"disabled",
 																													  }];
 }
@@ -137,7 +137,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
                       updateExisting:YES
                                error:nil];
 	
-	[[AppDelegate sharedDelegate].serviceLocator.analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
+	[[BWServiceLocator sharedServiceLocator].analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
 																													  BWAnalyticsAttributeAction : @"enabled",
 																													  }];
 }
