@@ -24,9 +24,7 @@
 #endif
 
 static const CGFloat kTopSpacing4Inch = 80.0f;
-static const CGFloat kTopSpacing35Inch = 30.0f;
 static const CGFloat kVerticalGap4Inch = 54.0f;
-static const CGFloat kVerticalGap35Inch = 5.0f;
 static const CGFloat kDigitHorizontalGap = 40.0f;
 static const CGFloat kFailedAttemptLabelYOffset = -216.0f;
 static const CGFloat kFailedAttemptLabelHeight = 22.0f;
@@ -109,14 +107,14 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     if (!_usesKeychain &&
         [self.delegate respondsToSelector:@selector(deletePasscode)]) {
         [self.delegate deletePasscode];
-        
+
         return;
     }
-    
+
 	[SFHFKeychainUtils deleteItemForUsername:_keychainPasscodeUsername
 							  andServiceName:_keychainServiceName
 									   error:nil];
-	
+
 	[[BWServiceLocator sharedServiceLocator].analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
 																													  BWAnalyticsAttributeAction : @"disabled",
 																													  }];
@@ -127,16 +125,16 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     if (!_usesKeychain &&
         [self.delegate respondsToSelector:@selector(savePasscode:)]) {
         [self.delegate savePasscode:passcode];
-        
+
         return;
     }
-    
+
     [SFHFKeychainUtils storeUsername:_keychainPasscodeUsername
                          andPassword:passcode
                       forServiceName:_keychainServiceName
                       updateExisting:YES
                                error:nil];
-	
+
 	[[BWServiceLocator sharedServiceLocator].analyticsService tagEvent:BWAnalyticsEventSetupPasscode attributes:@{
 																													  BWAnalyticsAttributeAction : @"enabled",
 																													  }];
@@ -148,7 +146,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 		[self.delegate respondsToSelector:@selector(passcode)]) {
 		return [self.delegate passcode];
 	}
-	
+
 	return [SFHFKeychainUtils getPasswordForUsername:_keychainPasscodeUsername
 									  andServiceName:_keychainServiceName
 											   error:nil];
@@ -158,25 +156,25 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 #pragma mark - View life
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self _loadFonts];
-    
+
 	self.view.backgroundColor = _backgroundColor;
-    
+
 	_failedAttempts = 0;
 	_animatingView = [[UIView alloc] initWithFrame: self.view.frame];
 	[self.view addSubview: _animatingView];
-    
+
 	[self _setupViews];
     [self _setupLabels];
     [self _setupDigitFields];
-	
+
 	_passcodeTextField = [[UITextField alloc] initWithFrame: CGRectZero];
 	_passcodeTextField.delegate = self;
     _passcodeTextField.secureTextEntry = YES;
     _passcodeTextField.translatesAutoresizingMaskIntoConstraints = NO;
 	[_passcodeTextField becomeFirstResponder];
-    
+
     [self.view setNeedsUpdateConstraints];
 }
 
@@ -198,7 +196,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     _isUserSwitchingBetweenPasscodeModes = NO;
 	[self _resetUI];
 	[_passcodeTextField resignFirstResponder];
-	
+
     if ([self.delegate respondsToSelector: @selector(passcodeViewControllerWillClose)]) {
 		[self.delegate performSelector: @selector(passcodeViewControllerWillClose)];
     }
@@ -293,7 +291,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     _coverView.tag = _coverViewTag;
     _coverView.hidden = YES;
     [[UIApplication sharedApplication].keyWindow addSubview: _coverView];
-    
+
     _complexPasscodeOverlayView = [[UIView alloc] initWithFrame:CGRectZero];
     _complexPasscodeOverlayView.backgroundColor = [UIColor whiteColor];
     _complexPasscodeOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -309,7 +307,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_enterPasscodeLabel.font = _labelFont;
 	_enterPasscodeLabel.textAlignment = NSTextAlignmentCenter;
 	[_animatingView addSubview: _enterPasscodeLabel];
-	
+
 	// It is also used to display the "Passcodes did not match" error message
     // if the user fails to confirm the passcode.
 	_failedAttemptLabel = [[UILabel alloc] initWithFrame: CGRectZero];
@@ -327,11 +325,11 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     [_forgottenPasswordButton setTitleColor:[Appearance limeThemeColor] forState:UIControlStateNormal];
     _forgottenPasswordButton.titleLabel.font = [UIFont bw_lightItalicMrEavesFontWithSize:22.f];
     [_animatingView addSubview:_forgottenPasswordButton];
-    
+
     _enterPasscodeLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	_failedAttemptLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _forgottenPasswordButton.translatesAutoresizingMaskIntoConstraints = NO;
-	
+
 	[self _resetUI];
 }
 
@@ -347,7 +345,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     [_firstDigitTextField setBorderStyle:UITextBorderStyleNone];
     _firstDigitTextField.userInteractionEnabled = NO;
     [_animatingView addSubview:_firstDigitTextField];
-    
+
     _secondDigitTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     _secondDigitTextField.backgroundColor = _passcodeBackgroundColor;
     _secondDigitTextField.textAlignment = NSTextAlignmentCenter;
@@ -358,7 +356,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     [_secondDigitTextField setBorderStyle:UITextBorderStyleNone];
     _secondDigitTextField.userInteractionEnabled = NO;
     [_animatingView addSubview:_secondDigitTextField];
-    
+
     _thirdDigitTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     _thirdDigitTextField.backgroundColor = _passcodeBackgroundColor;
     _thirdDigitTextField.textAlignment = NSTextAlignmentCenter;
@@ -369,7 +367,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     [_thirdDigitTextField setBorderStyle:UITextBorderStyleNone];
     _thirdDigitTextField.userInteractionEnabled = NO;
     [_animatingView addSubview:_thirdDigitTextField];
-    
+
     _fourthDigitTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     _fourthDigitTextField.backgroundColor = _passcodeBackgroundColor;
     _fourthDigitTextField.textAlignment = NSTextAlignmentCenter;
@@ -380,7 +378,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     [_fourthDigitTextField setBorderStyle:UITextBorderStyleNone];
     _fourthDigitTextField.userInteractionEnabled = NO;
     [_animatingView addSubview:_fourthDigitTextField];
-    
+
     _firstDigitTextField.translatesAutoresizingMaskIntoConstraints = NO;
     _secondDigitTextField.translatesAutoresizingMaskIntoConstraints = NO;
     _thirdDigitTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -389,40 +387,40 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 
 - (void)updateViewConstraints {
     [super updateViewConstraints];
-    
+
     _firstDigitTextField.hidden = !self.isSimple;
     _secondDigitTextField.hidden = !self.isSimple;
     _thirdDigitTextField.hidden = !self.isSimple;
     _fourthDigitTextField.hidden = !self.isSimple;
-    
+
     _complexPasscodeOverlayView.hidden = self.isSimple;
     _passcodeTextField.hidden = self.isSimple;
 	_passcodeTextField.keyboardType =
     self.isSimple ? UIKeyboardTypeNumberPad : UIKeyboardTypeASCIICapable;
     [_passcodeTextField reloadInputViews];
-    
+
     if (self.isSimple) {
         [_animatingView addSubview:_passcodeTextField];
     }
     else {
         [_complexPasscodeOverlayView addSubview:_passcodeTextField];
-        
+
         // If we come from simple state some constraints are added even if
         // translatesAutoresizingMaskIntoConstraints = NO,
         // because no constraints are added manually in that case
         [_passcodeTextField removeConstraints:_passcodeTextField.constraints];
     }
-    
+
     // MARK: Please read
 	// The controller works properly on all devices and orientations, but looks odd on iPhone's landscape.
 	// Usually, lockscreens on iPhone are kept portrait-only, though. It also doesn't fit inside a modal when landscape.
 	// That's why only portrait is selected for iPhone's supported orientations.
 	// Modify this to fit your needs.
-	
-	
-	CGFloat verticalGap = is4InchDeviceOrHigher() ? kVerticalGap4Inch : self.displayedAsLockScreen ? kVerticalGap35Inch : kVerticalGap35Inch + 15.0f;
-	CGFloat topSpacing = is4InchDeviceOrHigher() ? kTopSpacing4Inch : self.displayedAsLockScreen ? kTopSpacing35Inch : kTopSpacing35Inch + 30.0f;
-	
+
+
+	CGFloat verticalGap = kVerticalGap4Inch
+	CGFloat topSpacing = kTopSpacing4Inch
+
 	NSLayoutConstraint *enterPasscodeConstraintCenterX =
     [NSLayoutConstraint constraintWithItem: _enterPasscodeLabel
                                  attribute: NSLayoutAttributeCenterX
@@ -441,7 +439,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
                                   constant: topSpacing];
     [self.view addConstraint: enterPasscodeConstraintCenterX];
     [self.view addConstraint: enterPasscodeConstraintCenterY];
-		
+
     if (self.isSimple) {
         NSLayoutConstraint *firstDigitX =
         [NSLayoutConstraint constraintWithItem: _firstDigitTextField
@@ -516,7 +514,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
         [self.view addConstraint:thirdDigitY];
         [self.view addConstraint:fourthDigitY];
     }
-	
+
     NSLayoutConstraint *failedAttemptLabelCenterX =
     [NSLayoutConstraint constraintWithItem: _failedAttemptLabel
                                  attribute: NSLayoutAttributeCenterX
@@ -584,7 +582,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
                                 forgottenPasswordButtonY,
                                 forgottenPasswordButtonWidth,
                                 ]];
-    
+
 }
 
 
@@ -639,7 +637,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 			newCenter = CGPointMake(mainWindow.center.x,
 									mainWindow.center.y + self.navigationController.navigationBar.frame.size.height / 2);
 		}
-        
+
 		if (animated) {
 			[UIView animateWithDuration: _lockAnimationDuration animations: ^{
 				self.view.center = newCenter;
@@ -648,7 +646,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
         else {
 			self.view.center = newCenter;
 		}
-		
+
 		// Add nav bar & logout button if specified
 		if (hasLogout) {
 			// Navigation Bar with custom UI
@@ -662,7 +660,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 				self.navBar.titleTextAttributes =
 				@{ NSForegroundColorAttributeName : self.navigationTitleColor };
 			}
-			
+
 			// Navigation item
 			UIBarButtonItem *leftButton =
             [[UIBarButtonItem alloc] initWithTitle:logoutTitle
@@ -673,37 +671,37 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
             [[UINavigationItem alloc] initWithTitle:self.title];
 			item.leftBarButtonItem = leftButton;
 			item.hidesBackButton = YES;
-			
+
 			[self.navBar pushNavigationItem:item animated:NO];
 			[mainWindow addSubview:self.navBar];
 		}
-		
+
 		_isCurrentlyOnScreen = YES;
 	}
 }
 
 
 - (void)_prepareNavigationControllerWithController:(UIViewController *)viewController {
-	
+
 	if (!_displayedAsModal) {
 		[viewController.navigationController pushViewController:self
 													   animated:YES];
         self.navigationItem.hidesBackButton = _hidesBackButton;
 		return;
 	}
-	
+
 	self.navigationItem.rightBarButtonItem =
 	[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 												  target:self
 												  action:@selector(_cancelAndDismissMe)];
-	
+
 	UINavigationController *navController =
 	[[UINavigationController alloc] initWithRootViewController:self];
-	
+
 	// Make sure nav bar for logout is off the screen
 	[self.navBar removeFromSuperview];
 	self.navBar = nil;
-	
+
 	// Customize navigation bar
 	// Make sure UITextAttributeTextColor is not set to nil
 	// barTintColor & translucent is only called on iOS7+
@@ -716,7 +714,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 		navController.navigationBar.titleTextAttributes =
 		@{ NSForegroundColorAttributeName : self.navigationTitleColor };
 	}
-	
+
 	[viewController presentViewController:navController
 								 animated:YES
 							   completion:nil];
@@ -781,7 +779,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserConfirmingPasscode = NO;
 	_isUserEnablingPasscode = NO;
     _isUserSwitchingBetweenPasscodeModes = NO;
-    
+
 	[self _resetUI];
 }
 
@@ -793,7 +791,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserChangingPasscode = YES;
 	_isUserConfirmingPasscode = NO;
 	_isUserEnablingPasscode = NO;
-    
+
 	[self _resetUI];
 }
 
@@ -806,7 +804,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserConfirmingPasscode = NO;
 	_isUserEnablingPasscode = NO;
     _isUserSwitchingBetweenPasscodeModes = NO;
-    
+
 	[self _resetUI];
 }
 
@@ -819,7 +817,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserConfirmingPasscode = NO;
 	_isUserEnablingPasscode = YES;
     _isUserSwitchingBetweenPasscodeModes = NO;
-    
+
 	[self _resetUI];
 }
 
@@ -831,12 +829,12 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
+
     if ([string isEqualToString: @"\n"]) return NO;
-    
+
     NSString *typedString = [textField.text stringByReplacingCharactersInRange: range
                                                                     withString: string];
-    
+
     if (self.isSimple) {
         if (typedString.length >= 1) _firstDigitTextField.secureTextEntry = YES;
         else _firstDigitTextField.secureTextEntry = NO;
@@ -846,17 +844,17 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
         else _thirdDigitTextField.secureTextEntry = NO;
         if (typedString.length >= 4) _fourthDigitTextField.secureTextEntry = YES;
         else _fourthDigitTextField.secureTextEntry = NO;
-        
+
         if (typedString.length == 4) {
         	// Make the last bullet show up
 			[self performSelector: @selector(_validatePasscode:)
 					   withObject: typedString
 					   afterDelay: 0.15];
 		}
-        
+
         if (typedString.length > 4) return NO;
     }
-	
+
 	return YES;
 }
 
@@ -929,7 +927,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
             return NO;
         }
     }
-    
+
     return YES;
 }
 
@@ -938,12 +936,12 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 - (void)_askForNewPasscode {
 	_isUserBeingAskedForNewPasscode = YES;
 	_isUserConfirmingPasscode = NO;
-    
+
     // Update layout considering type
     [self.view setNeedsUpdateConstraints];
-    
+
 	_failedAttemptLabel.hidden = YES;
-	
+
 	CATransition *transition = [CATransition animation];
 	[transition setDelegate: self];
 	[self performSelector: @selector(_resetUI) withObject: nil afterDelay: 0.1f];
@@ -960,7 +958,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserBeingAskedForNewPasscode = YES;
 	_isUserConfirmingPasscode = NO;
 	_tempPasscode = @"";
-	
+
 	CATransition *transition = [CATransition animation];
 	[transition setDelegate: self];
 	[self performSelector: @selector(_resetUIForReEnteringNewPasscode)
@@ -979,7 +977,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_isUserBeingAskedForNewPasscode = NO;
 	_isUserConfirmingPasscode = YES;
 	_failedAttemptLabel.hidden = YES;
-	
+
 	CATransition *transition = [CATransition animation];
 	[transition setDelegate: self];
 	[self performSelector: @selector(_resetUI) withObject: nil afterDelay: 0.1f];
@@ -995,9 +993,9 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 - (void)_denyAccess {
 	[self _resetTextFields];
 	_passcodeTextField.text = @"";
-    
+
 	_failedAttempts++;
-	
+
 	if (_maxNumberOfAllowedFailedAttempts > 0 &&
 		_failedAttempts == _maxNumberOfAllowedFailedAttempts &&
 		[self.delegate respondsToSelector: @selector(maxNumberOfFailedAttemptsReached)]) {
@@ -1007,7 +1005,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 //	[[NSNotificationCenter defaultCenter] postNotificationName: @"maxNumberOfFailedAttemptsReached"
 //														object: self
 //													  userInfo: nil];
-	
+
 	if (_failedAttempts == 1) {
         _failedAttemptLabel.text = LocalizedString(@"PASSCODE_1_FAILED_ATTEMPT");
     }
@@ -1035,7 +1033,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 }
 
 - (void)setLabelText {
-	
+
 	if (_isUserChangingPasscode) {
 		if (_isUserBeingAskedForNewPasscode) {
 			_enterPasscodeLabel.text = LocalizedString(@"PASSCODE_ENTER_YOUR_NEW_PASSCODE");
@@ -1071,13 +1069,13 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	_passcodeTextField.text = @"";
 
     _forgottenPasswordButton.hidden = !_displayedAsLockScreen;
-	
+
 	[self setLabelText];
-	
+
 	// Make sure nav bar for logout is off the screen
 	[self.navBar removeFromSuperview];
 	self.navBar = nil;
-    
+
 }
 
 - (void)_resetUIForReEnteringNewPasscode {
@@ -1089,7 +1087,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 														 andServiceName: _keychainServiceName
 																  error: nil];
 	_enterPasscodeLabel.text = savedPasscode.length == 0 ? LocalizedString(@"PASSCODE_ENTER_YOUR_PASSCODE") : LocalizedString(@"PASSCODE_ENTER_YOUR_NEW_PASSCODE");
-	
+
 	_failedAttemptLabel.hidden = NO;
 	_failedAttemptLabel.text = LocalizedString(@"PASSCODE_DID_NOT_MATCH");
 	_failedAttemptLabel.backgroundColor = _failedAttemptLabelBackgroundColor;
@@ -1123,7 +1121,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     if (_isUserSwitchingBetweenPasscodeModes && (_isUserBeingAskedForNewPasscode || _isUserConfirmingPasscode)) {
         return !_isSimple;
     }
-    
+
     return _isSimple;
 }
 
@@ -1138,12 +1136,12 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 #pragma mark - Init
 + (instancetype)sharedUser {
     __strong static LTHPasscodeViewController *sharedObject = nil;
-    
+
 	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{
 		sharedObject = [[LTHPasscodeViewController alloc] init];
 	});
-	
+
 	return sharedObject;
 }
 
@@ -1193,19 +1191,19 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
     _usesKeychain = YES;
     _displayedAsModal = YES;
     _hidesBackButton = NO;
-    
+
     // Colors
     _backgroundColor =  [Appearance backgroundColor];
     _passcodeBackgroundColor = [UIColor clearColor];
     _coverViewBackgroundColor = [Appearance backgroundColor];
     _failedAttemptLabelBackgroundColor =  [Appearance redThemeColor];
     _enterPasscodeLabelBackgroundColor = [UIColor clearColor];
-    
+
     // Text Colors
     _labelTextColor = [Appearance redThemeColor];
     _passcodeTextColor = [UIColor colorWithWhite:0.31f alpha:1.0f];
     _failedAttemptLabelTextColor = [Appearance backgroundColor];
-    
+
     // Keychain & misc
     _keychainPasscodeUsername = @"cluePasscode";
     _keychainTimerStartUsername = @"cluePasscodeTimerStart";
@@ -1243,7 +1241,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	// I'll be honest and mention I have no idea why this line of code below works.
 	// Without it, if you present the passcode view as lockscreen (directly on the window)
 	// and then inside of a modal, the orientation will be wrong.
-	
+
 	// If you could explain why, I'd be more than grateful :)
 	return UIInterfaceOrientationMaskPortraitUpsideDown;
 }
@@ -1291,7 +1289,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 	UIInterfaceOrientation orientation = [self desiredOrientation];
     CGFloat angle = UIInterfaceOrientationAngleOfOrientation(orientation);
     CGAffineTransform transform = CGAffineTransformMakeRotation(angle);
-	
+
     [self setIfNotEqualTransform: transform
 						   frame: self.view.window.bounds];
 }
@@ -1320,7 +1318,7 @@ static const CGFloat kFailedAttemptLabelHeight = 22.0f;
 
 CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientation) {
     CGFloat angle;
-	
+
     switch (orientation) {
         case UIInterfaceOrientationPortraitUpsideDown:
             angle = (float)M_PI;
@@ -1335,7 +1333,7 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
             angle = 0.0;
             break;
     }
-	
+
     return angle;
 }
 
@@ -1346,9 +1344,9 @@ UIInterfaceOrientationMask UIInterfaceOrientationMaskFromOrientation(UIInterface
 # pragma mark - Custom added methods
 
 - (void)addClueLogo {
-	
+
 	UIImageView *iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"passcode_logo"]];
-	
+
 	CGRect frame = iv.frame;
 	frame.origin.x = 160.0f - frame.size.width/2;
 	frame.origin.y = 30.0f;
