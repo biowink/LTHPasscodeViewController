@@ -11,6 +11,9 @@
 #import "BWAnalyticsService.h"
 #import "AppDelegate.h"
 #import "BWServiceLocator.h"
+#import "Appearance+Color.h"
+#import "BWUtilities.h"
+#import "UIFont+Clue.h"
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
